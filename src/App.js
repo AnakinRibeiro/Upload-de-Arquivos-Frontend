@@ -29,14 +29,13 @@ function App() {
     setUploadedFiles({
       uploadedFiles: uploadedFiles.concat(uploadedFiless)
     });
-
-    console.log(uploadedFiles);
   };
 
   return (
     <Container>
       <Content>
         <Upload onUpload={handleUpload} />
+        <FileList files={uploadedFiles} />
       </Content>
       <GlobalStyles />
     </Container>

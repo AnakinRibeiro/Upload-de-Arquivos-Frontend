@@ -4,53 +4,14 @@ import { MdCheckCircle, MdError, MdLink } from 'react-icons/md';
 
 import { Container, FileInfo, Preview } from './styles';
 
-const FileList = ({ files, onDelete }) => (
-  <Container>
-    {files.map(uploadedFile => (
-      <li key={uploadedFile.id}>
-        <FileInfo>
-          <Preview src={uploadedFile.preview} />
-          <div>
-            <strong>{uploadedFile.name}</strong>
-            <span>
-              {uploadedFile.readableSize}{' '}
-              {!!uploadedFile.url && (
-                <button onClick={() => onDelete(uploadedFile.id)}>
-                  Excluir
-                </button>
-              )}
-            </span>
-          </div>
-        </FileInfo>
+const FileList = ({ files }) => {
+  const { uploadedFiles } = files;
 
-        <div>
-          {!uploadedFile.uploaded && !uploadedFile.error && (
-            <CircularProgressbar
-              styles={{
-                root: { width: 24, marginTop: -15 },
-                path: { stroke: '#7159c1' }
-              }}
-              strokeWidth={10}
-              value={uploadedFile.progress}
-            />
-          )}
-
-          {uploadedFile.url && (
-            <a
-              href={uploadedFile.url}
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <MdLink styles={{ marginRight: 8 }} size={24} color='#222' />
-            </a>
-          )}
-
-          {uploadedFile.uploaded && <MdCheckCircle size={24} color='#78e5d5' />}
-          {uploadedFile.error && <MdError size={24} color='#e57878' />}
-        </div>
-      </li>
-    ))}
-  </Container>
-);
+  return (
+    <Container>
+      {uploadedFiles && uploadedFiles.map(file => file.name)}
+    </Container>
+  );
+};
 
 export default FileList;
