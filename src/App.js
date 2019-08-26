@@ -14,7 +14,7 @@ function App() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const handleUpload = files => {
-    const uploadedFiless = files.map(file => ({
+    const uploadingFiles = files.map(file => ({
       file,
       id: uniqueId(),
       name: file.name,
@@ -26,8 +26,34 @@ function App() {
       url: null
     }));
 
-    setUploadedFiles({
-      uploadedFiles: uploadedFiles.concat(uploadedFiless)
+    setUploadedFiles(uploadedFiles.concat(uploadingFiles));
+
+    uploadingFiles.forEach(processUpload);
+  };
+
+  const updateFile = (id, data) => {
+    setUploadedFiles(
+      uploadedFiles.map(uploadedFile => {
+        return id === uploadedFile.id
+          ? { ...uploadedFile, ...data }
+          : uploadedFile;
+      })
+    );
+  };
+
+  const processUpload = uploadedFile => {
+    const data = new FormData();
+
+    data.append('file', uploadedFile.file, uploadedFile.name);
+
+    api.post('posts', data, {
+      onUploadProgress: e => {
+        const progress = parseInt(Math.round((e.loaded * 100) / e.total));
+
+        updateFile(uploadedFile.id, {
+          progress
+        });
+      }
     });
   };
 
@@ -35,7 +61,7 @@ function App() {
     <Container>
       <Content>
         <Upload onUpload={handleUpload} />
-        <FileList files={uploadedFiles} />
+        {!!uploadedFiles.length && <FileList files={uploadedFiles} />}
       </Content>
       <GlobalStyles />
     </Container>
